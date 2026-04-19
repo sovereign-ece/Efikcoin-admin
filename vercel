@@ -1,0 +1,3 @@
+npm install -g vercel
+cd /mnt/okcomputer/output/app
+vercel --prod

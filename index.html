@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>EfikCoin Eternal – Global Ecosystem & Liquidity Pool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Language IP detection + Google Translate -->
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0a0f1e 0%, #03060f 100%); overflow-x: hidden; }
+        .hero-glow { background: radial-gradient(ellipse at 70% 30%, rgba(0,198,251,0.15) 0%, rgba(0,0,0,0) 70%); }
+        .glass-card { background: rgba(15, 25, 45, 0.65); backdrop-filter: blur(14px); border: 1px solid rgba(0, 255, 255, 0.25); border-radius: 2rem; transition: all 0.3s; }
+        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 20px 35px -15px rgba(0,198,251,0.3); }
+        .btn-primary { background: linear-gradient(135deg, #00c6fb, #005bea); transition: all 0.2s; }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 10px 20px -5px #005bea80; }
+        .btn-outline { border: 1px solid #00c6fb; background: transparent; transition: all 0.2s; }
+        .btn-outline:hover { background: rgba(0,198,251,0.1); transform: scale(1.02); }
+        .bot-check-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .fade-out { opacity: 0; pointer-events: none; }
+        .match-card { background: rgba(0,0,0,0.5); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; }
+        .odds-btn { background: #1a2a3a; border: 1px solid #00c6fb; transition: 0.2s; padding: 0.5rem; border-radius: 0.5rem; text-align: center; cursor: pointer; }
+        .odds-btn:hover { background: #00c6fb20; transform: scale(1.02); }
+        .success-message { background: #10b981; color: white; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; text-align: center; }
+        .whitepaper-card { background: rgba(0,0,0,0.4); border-left: 4px solid #00c6fb; }
+        .lang-selector { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.7); padding: 0.5rem; border-radius: 2rem; backdrop-filter: blur(8px); }
+        .lang-selector select { background: transparent; color: white; border: 1px solid #00c6fb; border-radius: 2rem; padding: 0.25rem 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-900 p-6 rounded-2xl flex flex-col items-center"><i class="fas fa-spinner fa-spin text-4xl text-cyan-400"></i><p id="loading-text" class="mt-3">Processing...</p></div>
+    </div>
+
+    <!-- BOT CHECK OVERLAY -->
+    <div id="bot-overlay" class="bot-check-overlay">
+        <div class="glass-card p-8 max-w-md w-full text-center mx-4">
+            <i class="fas fa-robot text-5xl text-cyan-400 mb-4"></i>
+            <h2 class="text-2xl font-bold mb-2">Verify You Are Human</h2>
+            <p class="text-gray-300 text-sm mb-6">Please confirm you are not a bot to enter the EfikCoin Eternal ecosystem.</p>
+            <div class="flex items-center justify-center gap-3 bg-black/30 p-4 rounded-xl">
+                <input type="checkbox" id="bot-checkbox" class="w-5 h-5 accent-cyan-500">
+                <label for="bot-checkbox" class="text-sm">I am not a robot</label>
+            </div>
+            <button id="verify-bot-btn" class="btn-primary w-full mt-6 py-3 rounded-xl font-semibold">Enter Website</button>
+            <p class="text-xs text-gray-400 mt-4">We protect our community from spam and scams.</p>
+        </div>
+    </div>
+
+    <!-- MAIN WEBSITE CONTENT -->
+    <div id="main-content" class="hidden opacity-0 transition-opacity duration-700">
+        <!-- Top Bar -->
+        <div class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-3 bg-black/50 backdrop-blur-md border-b border-white/10">
+            <div class="flex items-center gap-2">
+                <img src="https://raw.githubusercontent.com/Efikcoinofficialecosystem/efikcoin-eternal/main/1772019882787.png" class="w-8 h-8 rounded-full" alt="logo">
+                <span class="font-bold text-cyan-300">EfikCoin Eternal</span>
+                <a href="https://efikcoin-eternal-blockchain.github.io/ECE-Wallet/" target="_blank" class="text-xs text-gray-400 hover:text-cyan-300 ml-2"><i class="fas fa-wallet"></i> Wallet</a>
+            </div>
+            <div id="google_translate_element" class="text-sm"></div>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero-glow min-h-screen flex items-center justify-center px-4 pt-20">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="inline-block px-4 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-sm mb-6 animate-pulse">
+                    <i class="fas fa-infinity mr-1"></i> Built for Generations | Sustainable | Transparent
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold leading-tight">
+                    The <span class="bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">Eternal</span> Economic Revival
+                </h1>
+                <p class="text-xl text-gray-300 mt-6 max-w-2xl mx-auto">
+                    EfikCoin is a non‑custodial, community‑first blockchain ecosystem built on Binance Smart Chain. Restore lost economic value, create sustainable wealth, and empower every human – today and for future generations.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center mt-10">
+                    <a href="https://efikcoin-eternal-blockchain.github.io/ECE-Wallet/" target="_blank" class="btn-primary px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
+                        <i class="fas fa-wallet"></i> Launch Wallet
+                    </a>
+                    <a href="#whitepaper" class="btn-outline px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i> Whitepaper
+                    </a>
+                    <a href="#sports" class="btn-outline px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
+                        <i class="fas fa-futbol"></i> Sports Betting
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust & Safety Banner -->
+        <div class="max-w-5xl mx-auto px-4 -mt-10 mb-12">
+            <div class="glass-card p-4 flex flex-wrap justify-center gap-6 text-sm">
+                <span><i class="fas fa-check-circle text-green-400"></i> Contract Verified on BscScan</span>
+                <span><i class="fas fa-lock text-cyan-400"></i> Non‑Custodial (You own keys)</span>
+                <span><i class="fas fa-chart-line text-blue-400"></i> Liquidity Locked (Team Finance)</span>
+                <span><i class="fas fa-users text-yellow-400"></i> 10% Referral Rewards</span>
+                <span><i class="fas fa-water text-cyan-400"></i> 2% tx fee → Liquidity Pool</span>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <section class="py-16 px-4">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">What is <span class="text-cyan-400">EfikCoin Eternal</span>?</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-4">
+                        <p class="text-gray-300 leading-relaxed">EfikCoin Eternal is more than a token – it is a complete decentralized financial ecosystem built on Binance Smart Chain. It offers a non‑custodial wallet, real staking, lending/borrowing, multi‑network swaps, and a referral system – all designed to return economic power to the people.</p>
+                        <p class="text-gray-300 leading-relaxed">Our mission: restore lost economic growth for individuals who have been victims of inflation, failed banks, or broken systems. EfikCoin provides a transparent, verifiable, and sustainable alternative.</p>
+                        <div class="flex gap-4 pt-4">
+                            <div><i class="fas fa-database text-cyan-400"></i> <span class="text-sm">Total Supply: <strong>100,000,000 ECE</strong></span></div>
+                            <div><i class="fas fa-chart-pie text-cyan-400"></i> <span class="text-sm">Decimals: 18</span></div>
+                            <div><i class="fas fa-percent text-cyan-400"></i> <span class="text-sm">Tx Fee: <strong>2%</strong> (auto‑liquidity)</span></div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="text-xl font-bold mb-4">Core Principles</h3>
+                        <ul class="space-y-3">
+                            <li><i class="fas fa-check-circle text-green-400"></i> Non‑custodial – you control your private keys</li>
+                            <li><i class="fas fa-check-circle text-green-400"></i> Fully transparent – contract verified, open source</li>
+                            <li><i class="fas fa-check-circle text-green-400"></i> Sustainable tokenomics with deflationary mechanics</li>
+                            <li><i class="fas fa-check-circle text-green-400"></i> Community governance (future DAO)</li>
+                            <li><i class="fas fa-check-circle text-green-400"></i> Lifetime support and development</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Whitepaper Section -->
+        <section id="whitepaper" class="py-16 px-4 bg-black/30">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">📄 Whitepaper: EfikCoin Eternal</h2>
+                <div class="whitepaper-card glass-card p-8 space-y-6">
+                    <div><h3 class="text-xl font-bold text-cyan-400">1. Vision</h3><p class="text-gray-300 mt-2">To create a self‑sustaining, decentralized financial ecosystem that provides every human with access to banking, savings, and investment tools – free from intermediaries and censorship.</p></div>
+                    <div><h3 class="text-xl font-bold text-cyan-400">2. Tokenomics (ECE)</h3><p class="text-gray-300 mt-2"><strong>Total Supply:</strong> 100,000,000 ECE (fixed, no minting after initial).<br><strong>Distribution:</strong> 40% Public Sale & Liquidity, 20% Staking Rewards, 15% Ecosystem Development, 10% Team (3‑year vesting), 10% Marketing, 5% Airdrops & Referrals.<br><strong>Deflationary & Liquidity Mechanism:</strong> 2% of every transaction is automatically sent to the ECE/BNB liquidity pool, providing continuous price support and rewarding long‑term holders.</p></div>
+                    <div><h3 class="text-xl font-bold text-cyan-400">3. Technology</h3><p class="text-gray-300 mt-2">Smart contract deployed on BSC (address: <span class="font-mono text-xs">0x9F8C29E496ECB6C39c221458f211234DfCB233E0</span>). Verified on BscScan. Non‑custodial wallet with encrypted backups. All transactions include a 2% fee that flows directly into the liquidity pool.</p></div>
+                    <div><h3 class="text-xl font-bold text-cyan-400">4. Roadmap</h3><ul class="list-disc list-inside text-gray-300 mt-2"><li><strong>Phase 1 (Complete):</strong> Token deployment, wallet launch, staking UI.</li><li><strong>Phase 2 (Q2 2025):</strong> Real staking contract, lending/borrowing protocol.</li><li><strong>Phase 3 (Q3 2025):</strong> Cross‑chain bridge (BSC ↔ Ethereum ↔ Polygon).</li><li><strong>Phase 4 (Q4 2025):</strong> DAO governance, fiat on‑ramp integration.</li><li><strong>Phase 5 (2026):</strong> Mobile app, EfikCoin debit card.</li></ul></div>
+                    <div><h3 class="text-xl font-bold text-cyan-400">5. Security & Audits</h3><p class="text-gray-300 mt-2">Smart contract fully audited by Team Finance (pre‑deployment). Ongoing third‑party audits planned every 6 months. Wallet encryption uses industry‑standard AES‑256 via ethers.js. No admin keys can steal user funds – non‑custodial by design.</p></div>
+                    <div><h3 class="text-xl font-bold text-cyan-400">6. Sustainability & Future Generations</h3><p class="text-gray-300 mt-2">EfikCoin is built to last. A portion of all protocol fees will be directed to an “Eternal Fund” – a multi‑sig wallet used for ecosystem grants, disaster recovery, and educational programs for children. Our goal is to create a financial legacy that outlives us all.</p></div>
+                </div>
+                <div class="text-center mt-6"><button id="download-whitepaper-txt" class="btn-outline px-6 py-2 rounded-xl">📥 Download Whitepaper (TXT)</button></div>
+            </div>
+        </section>
+
+        <!-- SPORTS BETTING SECTION (with liquidity integration) -->
+        <section id="sports" class="py-16 px-4">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8"><i class="fas fa-futbol text-green-400"></i> EfikCoin Sports Betting</h2>
+                <p class="text-center text-gray-300 mb-8">Bet on live matches using ECE tokens. 2% of every bet goes to the liquidity pool, strengthening the ecosystem.</p>
+                
+                <!-- Wallet Connection for Betting -->
+                <div class="glass-card p-4 mb-6 flex flex-wrap justify-between items-center gap-3">
+                    <div><p class="text-gray-400 text-sm">Betting Wallet</p><p id="bet-user-address" class="font-mono text-sm">Not connected</p></div>
+                    <div><p class="text-gray-400 text-sm">ECE Balance</p><p id="bet-ece-balance" class="text-xl font-bold">0.00</p></div>
+                    <button id="bet-connect-wallet" class="bg-purple-600/50 hover:bg-purple-600 px-4 py-2 rounded-full text-sm"><i class="fas fa-plug"></i> Connect Wallet</button>
+                </div>
+
+                <!-- Live Matches -->
+                <h3 class="text-xl font-bold mb-3">Today's Matches</h3>
+                <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"></div>
+
+                <!-- My Bets -->
+                <div class="glass-card p-4">
+                    <h3 class="text-xl font-bold mb-3"><i class="fas fa-receipt"></i> My Bets</h3>
+                    <div id="my-bets" class="space-y-2 text-sm"><p class="text-gray-400">Connect wallet to see your bets.</p></div>
+                </div>
+
+                <!-- Liquidity Pool Info -->
+                <div class="glass-card p-4 mt-6 text-center">
+                    <p class="text-cyan-400"><i class="fas fa-water"></i> ECE/BNB Liquidity Pool Address:</p>
+                    <p class="font-mono text-sm break-all">0x7FAbe1cc407f0e01c3cdF5Cc05744f8D98bC70B6</p>
+                    <p class="text-xs text-gray-400 mt-2">2% of every transaction is automatically added to this pool.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Section -->
+        <section id="register" class="py-20 px-4">
+            <div class="max-w-4xl mx-auto glass-card p-8">
+                <h2 class="text-3xl font-bold text-center mb-2">Join the Eternal Movement</h2>
+                <p class="text-center text-gray-300 mb-8">Register your email to receive updates, ecosystem news, and be part of the EfikCoin economic revival.</p>
+                <form id="registration-form" class="space-y-4">
+                    <div><label class="block text-sm mb-1">Full Name</label><input type="text" id="reg-name" class="w-full p-3 bg-black/50 rounded-xl border border-cyan-500/50" required></div>
+                    <div><label class="block text-sm mb-1">Email Address</label><input type="email" id="reg-email" class="w-full p-3 bg-black/50 rounded-xl border border-cyan-500/50" required></div>
+                    <div><label class="block text-sm mb-1">Message / Feedback</label><textarea id="reg-feedback" rows="3" class="w-full p-3 bg-black/50 rounded-xl border border-cyan-500/50" placeholder="How can EfikCoin help restore economic growth for you?"></textarea></div>
+                    <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold"><i class="fas fa-paper-plane"></i> Register Now</button>
+                </form>
+                <div id="form-message" class="mt-4 text-center"></div>
+                <p class="text-xs text-gray-400 text-center mt-6">Your data is stored locally and used only for community updates. We never share your information.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/10 py-8 px-4 text-center text-gray-400 text-sm">
+            <div class="flex flex-wrap justify-center gap-6 mb-4">
+                <a href="https://t.me/efikcoinofficialecosystem" target="_blank" class="hover:text-cyan-400"><i class="fab fa-telegram text-xl"></i></a>
+                <a href="https://discord.gg/Ub4vvudcV" target="_blank" class="hover:text-cyan-400"><i class="fab fa-discord text-xl"></i></a>
+                <a href="https://twitter.com/efikcoinstakin" target="_blank" class="hover:text-cyan-400"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61573960395647" target="_blank" class="hover:text-cyan-400"><i class="fab fa-facebook text-xl"></i></a>
+                <a href="mailto:efikcoineternal@gmail.com" class="hover:text-cyan-400"><i class="fas fa-envelope text-xl"></i></a>
+            </div>
+            <p>© 2025 EfikCoin Eternal. Built for generations. Restoring economic hope.</p>
+            <p class="text-xs mt-2">Token Contract: 0x9F8C29E496ECB6C39c221458f211234DfCB233E0 | BSC Mainnet</p>
+            <p class="text-xs">Liquidity Pool: 0x7FAbe1cc407f0e01c3cdF5Cc05744f8D98bC70B6 | 2% tx fee auto‑liquidity</p>
+        </footer>
+    </div>
+
+    <!-- Language selector (IP based) -->
+    <div class="lang-selector">
+        <select id="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">🌐 English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="zh-CN">中文</option>
+            <option value="ja">日本語</option>
+            <option value="ru">Русский</option>
+            <option value="ar">العربية</option>
+            <option value="hi">हिन्दी</option>
+            <option value="pt">Português</option>
+        </select>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script>
+        // ========== BOT CHECK ==========
+        const overlay = document.getElementById('bot-overlay');
+        const mainContent = document.getElementById('main-content');
+        const verifyBtn = document.getElementById('verify-bot-btn');
+        const checkbox = document.getElementById('bot-checkbox');
+        if (sessionStorage.getItem('bot_verified') === 'true') { overlay.style.display = 'none'; mainContent.classList.remove('hidden'); setTimeout(() => mainContent.style.opacity = '1', 50); }
+        verifyBtn.addEventListener('click', () => {
+            if (checkbox.checked) { sessionStorage.setItem('bot_verified', 'true'); overlay.classList.add('fade-out'); setTimeout(() => { overlay.style.display = 'none'; mainContent.classList.remove('hidden'); setTimeout(() => mainContent.style.opacity = '1', 50); }, 500); }
+            else alert('Please check the box to confirm you are not a robot.');
+        });
+
+        // ========== LANGUAGE IP DETECTION ==========
+        function getBrowserLanguage() {
+            const lang = navigator.language || navigator.userLanguage;
+            return lang.substring(0,2);
+        }
+        function changeLanguage(lang) {
+            const translateElement = document.querySelector('.goog-te-combo');
+            if (translateElement) {
+                translateElement.value = lang;
+                translateElement.dispatchEvent(new Event('change'));
+            } else {
+                // Fallback: reload with Google Translate parameter
+                window.location.href = `https://translate.google.com/translate?sl=en&tl=${lang}&u=${encodeURIComponent(window.location.href)}`;
+            }
+        }
+        // Auto-detect and set language
+        const userLang = getBrowserLanguage();
+        const supported = ['en','es','fr','de','zh-CN','ja','ru','ar','hi','pt'];
+        if (supported.includes(userLang) && userLang !== 'en') {
+            setTimeout(() => changeLanguage(userLang), 1000);
+        }
+
+        window.googleTranslateElementInit = () => {
+            new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+        };
+
+        // ========== WHITEPAPER DOWNLOAD ==========
+        document.getElementById('download-whitepaper-txt')?.addEventListener('click', () => {
+            const whitepaperText = `EFIKCOIN ETERNAL WHITEPAPER\nVersion 1.0 | March 2025\n\n1. VISION\nTo create a self‑sustaining, decentralized financial ecosystem...\n\n2. TOKENOMICS (ECE)\nTotal Supply: 100,000,000 ECE...\n...\n2% transaction fee automatically adds liquidity to the ECE/BNB pool.\n...`;
+            const blob = new Blob([whitepaperText], { type: 'text/plain' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'EfikCoin_Eternal_Whitepaper.txt'; link.click(); URL.revokeObjectURL(link.href);
+        });
+
+        // ========== REGISTRATION FORM ==========
+        const form = document.getElementById('registration-form');
+        const msgDiv = document.getElementById('form-message');
+        form?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const feedback = document.getElementById('reg-feedback').value.trim();
+            if (!name || !email) { msgDiv.innerHTML = '<div class="bg-red-500/20 text-red-300 p-2 rounded">Please fill name and email.</div>'; return; }
+            let registrations = JSON.parse(localStorage.getItem('efikcoin_registrations') || '[]');
+            registrations.push({ name, email, feedback, date: new Date().toISOString() });
+            localStorage.setItem('efikcoin_registrations', JSON.stringify(registrations));
+            form.reset();
+            msgDiv.innerHTML = '<div class="success-message"><i class="fas fa-check-circle"></i> Thank you! You are now registered.</div>';
+            setTimeout(() => msgDiv.innerHTML = '', 5000);
+        });
+
+        // ========== SPORTS BETTING & LIQUIDITY LOGIC ==========
+        const TOKEN_ADDRESS = "0x9F8C29E496ECB6C39c221458f211234DfCB233E0";
+        const PROJECT_WALLET = "0x59A8D4f63A7Bcc58bFfEC4e972ba079443c2e358"; // Ecosystem wallet that receives 2% fee
+        const BSC_RPC = "https://bsc-dataseed.binance.org/";
+        const TOKEN_ABI = [{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"uint8","name":"decimals","type":"uint8"},{"internalType":"uint256","name":"supply","type":"uint256"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"feeWallet","type":"address"},{"internalType":"string","name":"metadata_ipfs_hash","type":"string"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"metadata_ipfs_hash","type":"string"}],"name":"MetadataUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"owner","type":"address"}],"name":"TeamFinanceTokenMint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"burnFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"metadata","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"metadata_ipfs_hash","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"metadata_ipfs_hash","type":"string"}],"name":"updateMetadata","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+        
+        let provider, tokenContract, signer, userAddress = null, userBalance = 0;
+        let matches = [], bets = [];
+        
+        function loadBettingData() {
+            const storedMatches = localStorage.getItem("efikcoin_matches");
+            if(storedMatches) matches = JSON.parse(storedMatches);
+            else matches = [
+                { id: 0, home: "Manchester United", away: "Liverpool", oddsHome: 2.5, oddsDraw: 3.2, oddsAway: 2.8, status: "open", result: null },
+                { id: 1, home: "Real Madrid", away: "Barcelona", oddsHome: 2.1, oddsDraw: 3.5, oddsAway: 3.0, status: "open", result: null }
+            ];
+            const storedBets = localStorage.getItem("efikcoin_bets");
+            if(storedBets) bets = JSON.parse(storedBets);
+            else bets = [];
+        }
+        function saveMatches() { localStorage.setItem("efikcoin_matches", JSON.stringify(matches)); }
+        function saveBets() { localStorage.setItem("efikcoin_bets", JSON.stringify(bets)); }
+        loadBettingData();
+
+        function setLoading(show, text) {
+            const loader = document.getElementById("loading-overlay");
+            const textSpan = document.getElementById("loading-text");
+            if(loader && textSpan) { textSpan.innerText = text; loader.classList.toggle("hidden", !show); }
+        }
+
+        // Connect MetaMask
+        async function connectWithMetaMask() {
+            if(window.ethereum) {
+                try {
+                    const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    signer = web3Provider.getSigner();
+                    userAddress = await signer.getAddress();
+                    provider = new ethers.providers.JsonRpcProvider(BSC_RPC);
+                    tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, provider);
+                    const balance = await tokenContract.balanceOf(userAddress);
+                    userBalance = parseFloat(ethers.utils.formatUnits(balance, 18));
+                    document.getElementById("bet-user-address").innerText = userAddress.slice(0,10)+"...";
+                    document.getElementById("bet-ece-balance").innerText = userBalance.toFixed(2);
+                    renderMatches();
+                    renderMyBets();
+                } catch(e) { alert("MetaMask connection failed: "+e.message); }
+            } else {
+                alert("MetaMask not installed. Please install MetaMask or use WalletConnect.");
+            }
+        }
+        document.getElementById("bet-connect-wallet").onclick = connectWithMetaMask;
+
+        // Place bet with 2% liquidity fee
+        async function placeBet(matchId, outcome, amount) {
+            if(!userAddress) { alert("Connect wallet first"); return; }
+            if(amount <= 0 || amount > userBalance) { alert("Invalid amount or insufficient balance"); return; }
+            const match = matches[matchId];
+            if(match.status !== "open") { alert("Match already settled"); return; }
+            let odds = outcome === "home" ? match.oddsHome : (outcome === "draw" ? match.oddsDraw : match.oddsAway);
+            setLoading(true, "Approving & placing bet...");
+            try {
+                const amountWei = ethers.utils.parseUnits(amount.toString(), 18);
+                const feeAmount = amount * 0.02;
+                const feeWei = ethers.utils.parseUnits(feeAmount.toString(), 18);
+                const netAmount = amount - feeAmount;
+                const netWei = ethers.utils.parseUnits(netAmount.toString(), 18);
+                
+                const tokenWithSigner = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, signer);
+                // Approve total amount
+                const approveTx = await tokenWithSigner.approve(PROJECT_WALLET, amountWei);
+                await approveTx.wait();
+                // Transfer fee to project wallet (liquidity pool)
+                if (feeAmount > 0) {
+                    const feeTx = await tokenWithSigner.transfer(PROJECT_WALLET, feeWei);
+                    await feeTx.wait();
+                }
+                // Transfer net amount to admin wallet (bet escrow)
+                const transferTx = await tokenWithSigner.transfer(ADMIN_ADDRESS, netWei);
+                await transferTx.wait();
+                
+                const newBet = {
+                    id: Date.now(),
+                    user: userAddress,
+                    matchId,
+                    matchName: `${match.home} vs ${match.away}`,
+                    outcome,
+                    amount: netAmount,
+                    odds,
+                    fee: feeAmount,
+                    status: "pending",
+                    potentialWin: (netAmount * odds).toFixed(2),
+                    timestamp: new Date().toISOString()
+                };
+                bets.push(newBet);
+                saveBets();
+                renderMyBets();
+                const newBalance = await tokenContract.balanceOf(userAddress);
+                userBalance = parseFloat(ethers.utils.formatUnits(newBalance, 18));
+                document.getElementById("bet-ece-balance").innerText = userBalance.toFixed(2);
+                alert(`Bet placed! ${feeAmount} ECE added to liquidity pool. Net bet: ${netAmount} ECE on ${match.home} vs ${match.away} - ${outcome}. Potential win: ${newBet.potentialWin} ECE`);
+            } catch(e) { alert("Error: "+e.message); }
+            finally { setLoading(false); }
+        }
+
+        function renderMatches() {
+            const container = document.getElementById("matches-container");
+            if(!container) return;
+            container.innerHTML = "";
+            matches.forEach((match, idx) => {
+                const card = document.createElement("div");
+                card.className = "match-card";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-2"><span class="font-bold text-lg">${match.home}</span><span class="text-cyan-400">vs</span><span class="font-bold text-lg">${match.away}</span></div>
+                    <div class="flex gap-2 mt-3">
+                        <div class="odds-btn flex-1" data-outcome="home">🏠 ${match.oddsHome}</div>
+                        <div class="odds-btn flex-1" data-outcome="draw">🤝 ${match.oddsDraw}</div>
+                        <div class="odds-btn flex-1" data-outcome="away">✈️ ${match.oddsAway}</div>
+                    </div>
+                    ${match.status === "settled" ? `<p class="text-yellow-400 text-sm mt-2">Result: ${match.result === 0 ? match.home : (match.result === 1 ? "Draw" : match.away)}</p>` : '<input type="number" id="bet-amount-'+idx+'" placeholder="Amount (ECE)" class="bg-black/50 p-1 rounded w-full mt-2 text-sm">'}
+                    <p class="text-xs text-gray-400 mt-1">*2% goes to liquidity pool</p>
+                `;
+                container.appendChild(card);
+                if(match.status !== "settled") {
+                    const homeBtn = card.querySelector('[data-outcome="home"]');
+                    const drawBtn = card.querySelector('[data-outcome="draw"]');
+                    const awayBtn = card.querySelector('[data-outcome="away"]');
+                    const amountInput = document.getElementById(`bet-amount-${idx}`);
+                    homeBtn.onclick = () => { let amt = amountInput.value; if(amt) placeBet(idx, "home", parseFloat(amt)); else alert("Enter amount"); };
+                    drawBtn.onclick = () => { let amt = amountInput.value; if(amt) placeBet(idx, "draw", parseFloat(amt)); else alert("Enter amount"); };
+                    awayBtn.onclick = () => { let amt = amountInput.value; if(amt) placeBet(idx, "away", parseFloat(amt)); else alert("Enter amount"); };
+                }
+            });
+        }
+
+        function renderMyBets() {
+            const container = document.getElementById("my-bets");
+            if(!container) return;
+            if(!userAddress) { container.innerHTML = '<p class="text-gray-400">Connect wallet to see your bets.</p>'; return; }
+            const userBets = bets.filter(b => b.user.toLowerCase() === userAddress.toLowerCase());
+            if(userBets.length === 0) { container.innerHTML = '<p class="text-gray-400">No bets placed yet.</p>'; return; }
+            let html = '<div class="space-y-2">';
+            userBets.forEach(b => {
+                html += `<div class="bg-black/30 p-2 rounded flex justify-between text-xs"><span>${b.matchName}</span><span>${b.outcome} @${b.odds}</span><span>${b.amount} ECE + fee ${b.fee}</span><span class="${b.status === 'won' ? 'text-green-400' : (b.status === 'lost' ? 'text-red-400' : 'text-yellow-400')}">${b.status}</span></div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        renderMatches();
+    </script>
+</body>
+</html>

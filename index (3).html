@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EfikCoin Eternal - Real Blockchain Mining</title>
+    
+    <!-- Production SDKs -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/moralis@2.23.0/dist/moralis.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --gold: #FFD700;
+            --gold-glow: #FFA500;
+            --electric: #00FFFF;
+            --neon-pink: #FF00FF;
+            --matrix: #00FF41;
+            --danger: #FF0040;
+            --dark: #0a0a0f;
+            --panel: rgba(10, 10, 15, 0.95);
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* GPU-Accelerated Background */
+        #gpuCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Loading Screen with SDK Init */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sdk-loader {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .loader-ring {
+            position: absolute;
+            border: 4px solid transparent;
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-ring:nth-child(1) { width: 200px; height: 200px; top: 0; left: 0; animation-duration: 2s; }
+        .loader-ring:nth-child(2) { width: 160px; height: 160px; top: 20px; left: 20px; animation-duration: 1.5s; border-top-color: var(--electric); }
+        .loader-ring:nth-child(3) { width: 120px; height: 120px; top: 40px; left: 40px; animation-duration: 1s; border-top-color: var(--neon-pink); }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            color: var(--gold);
+            margin-top: 30px;
+            text-shadow: 0 0 20px var(--gold);
+            letter-spacing: 4px;
+        }
+
+        .loading-status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--electric);
+            font-family: 'Courier New', monospace;
+        }
+
+        .sdk-progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .sdk-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--electric));
+            width: 0%;
+            transition: width 0.3s;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Main App */
+        #app {
+            display: none;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Header with Live Stats */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(10,10,15,0.98) 0%, transparent 100%);
+            padding: 15px 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold), var(--electric));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
+            animation: logoPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.8); }
+        }
+
+        .brand-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            background: linear-gradient(90deg, var(--gold), var(--electric));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--electric);
+            letter-spacing: 1px;
+        }
+
+        .live-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .live-stat {
+            text-align: right;
+        }
+
+        .live-stat-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .live-stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(0,255,65,0.1);
+            border: 1px solid var(--matrix);
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--matrix);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* Dashboard Grid */
+        .dashboard {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            bottom: 90px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        /* Panel Styling */
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title i {
+            color: var(--electric);
+        }
+
+        /* Mining Power Panel (Left) */
+        .power-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .power-card {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,255,255,0.05));
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .power-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold);
+        }
+
+        .power-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .power-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: var(--gold);
+        }
+
+        .power-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+        }
+
+        .gpu-meter {
+            margin-top: 15px;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .meter-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--electric));
+            border-radius: 4px;
+            transition: width 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Center Mining Interface */
+        .mining-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .mining-core {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .core-rings {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .core-ring {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 50%;
+            animation: rotate 10s linear infinite;
+        }
+
+        .core-ring:nth-child(1) {
+            width: 100%; height: 100%;
+            border-color: rgba(255,215,0,0.3);
+            border-top-color: var(--gold);
+            animation-duration: 3s;
+        }
+
+        .core-ring:nth-child(2) {
+            width: 80%; height: 80%;
+            top: 10%; left: 10%;
+            border-color: rgba(0,255,255,0.3);
+            border-right-color: var(--electric);
+            animation-duration: 5s;
+            animation-direction: reverse;
+        }
+
+        .core-ring:nth-child(3) {
+            width: 60%; height: 60%;
+            top: 20%; left: 20%;
+            border-color: rgba(255,0,255,0.3);
+            border-bottom-color: var(--neon-pink);
+            animation-duration: 7s;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .mine-button {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: none;
+            background: radial-gradient(circle at 30% 30%, var(--gold), #B8860B);
+            color: var(--dark);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            box-shadow: 
+                0 0 60px rgba(255,215,0,0.5),
+                inset 0 -10px 30px rgba(0,0,0,0.3);
+            transition: all 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .mine-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+        }
+
+        .mine-button.mining {
+            animation: minePulse 0.5s ease-in-out infinite;
+            background: radial-gradient(circle at 30% 30%, var(--electric), #008B8B);
+        }
+
+        @keyframes minePulse {
+            0%, 100% { box-shadow: 0 0 60px rgba(255,215,0,0.5); }
+            50% { box-shadow: 0 0 100px rgba(0,255,255,0.8), 0 0 150px rgba(255,215,0,0.4); }
+        }
+
+        .hash-display {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .hash-rate {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            color: var(--electric);
+            text-shadow: 0 0 20px rgba(0,255,255,0.5);
+        }
+
+        .hash-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 5px;
+        }
+
+        .session-earnings {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,255,65,0.05));
+            border: 1px solid var(--matrix);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .earnings-label {
+            font-size: 11px;
+            color: var(--matrix);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .earnings-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            color: var(--matrix);
+            margin-top: 5px;
+        }
+
+        /* Right Panel - Blockchain Data */
+        .blockchain-feed {
+            flex: 1;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        .feed-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background: rgba(255,255,255,0.03);
+            border-left: 2px solid var(--electric);
+            border-radius: 0 8px 8px 0;
+            animation: feedSlide 0.3s;
+        }
+
+        @keyframes feedSlide {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-time {
+            color: var(--gold);
+            font-size: 10px;
+        }
+
+        .feed-tx {
+            color: var(--electric);
+            word-break: break-all;
+        }
+
+        /* Bottom Control Bar */
+        .control-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: linear-gradient(0deg, rgba(10,10,15,0.98) 0%, rgba(10,10,15,0.8) 100%);
+            border-top: 1px solid rgba(255,215,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+        }
+
+        .control-btn i {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover, .control-btn.active {
+            color: var(--gold);
+        }
+
+        .control-btn:hover i, .control-btn.active i {
+            background: rgba(255,215,0,0.1);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+            background: var(--panel);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 20px;
+            padding: 30px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: var(--gold);
+        }
+
+        /* Wallet Styles */
+        .balance-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), transparent);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .balance-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+
+        .wallet-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .wallet-tab.active {
+            background: rgba(255,215,0,0.2);
+            border-color: var(--gold);
+        }
+
+        .address-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--gold);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+        }
+
+        /* Progress Elements */
+        .mining-progress {
+            margin-top: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-large {
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill-large {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--electric), var(--neon-pink));
+        

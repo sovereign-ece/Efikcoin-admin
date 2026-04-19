@@ -1,0 +1,11 @@
+# 1. Create a GitHub repo
+# 2. Push the code
+cd /mnt/okcomputer/output/app
+git init
+git add .
+git commit -m "EfikCoin Eternal DeFi App"
+git remote add origin https://github.com/YOUR_USERNAME/efikcoin-eternal.git
+git push -u origin main
+
+# 3. Enable GitHub Pages in repo settings
+# 4. Set source to "main branch /docs folder" or use GitHub Actions

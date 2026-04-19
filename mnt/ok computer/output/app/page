@@ -1,0 +1,10 @@
+/mnt/okcomputer/output/app/
+├── src/                    # Source code (React + TypeScript)
+│   ├── sections/           # All page sections (Hero, Wallet, Staking, etc.)
+│   ├── hooks/              # Custom hooks (useWallet, useStaking, etc.)
+│   ├── types/              # TypeScript types
+│   ├── App.tsx             # Main app component
+│   └── index.css           # Global styles
+├── dist/                   # Production build (ready to deploy)
+├── public/                 # Static assets (images)
+└── package.json            # Dependencies
